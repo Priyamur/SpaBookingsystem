@@ -10,7 +10,7 @@ namespace Backend.Models
 
         public string? Name { get; set; }
 
-        public string? Date { get; set; }
+        public DateOnly Date { get; set; }
 
         public string? Time { get; set; }
 
@@ -30,6 +30,11 @@ namespace Backend.Models
 
         [ForeignKey("ServiceId")]
         public Service? Service { get; set; }
+
+        public int CalenderId { get; set; }
+
+        [ForeignKey("CalenderId")]
+        public Calender? Calender { get; set; }
 
       
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
 using Backend.Models;
+using Backend.DTOs;
 
 namespace Backend.Controllers
 {
@@ -82,6 +83,8 @@ namespace Backend.Controllers
         {
             var client = await  _context.Clients.FindAsync(clientId);
             var service = await _context.Services.FindAsync(serviceId);
+            var appointmentDate = DateOnly.Parse(date);
+            var calender = await _context.Calenders.FirstOrDefaultAsync(c => c.Date == appointmentDate);
             if(client == null || service == null)
             {
                 return NotFound("Data not found");
@@ -89,10 +92,10 @@ namespace Backend.Controllers
             var appointment = new Appointment
             {
                 Name = name,
-                Date = date,
+                Date = appointmentDate,
                 Time = time,
                 PhoneNumber = phoneNumber,
-               
+                CalenderId = calender.Id,
                 ClientAge = clientAge,
                 ServiceId = serviceId,
                 ClientId = clientId
@@ -107,7 +110,11 @@ namespace Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
+            
             var appointment = await _context.Appointments.FindAsync(id);
+            var calender = await _context.Calenders.FirstOrDefaultAsync(c => c.Id == appointment.CalenderId);
+            calender.NumberOfBookings -= 1;
+            calender.IsAvailable = true;
             if (appointment == null)
             {
                 return NotFound();

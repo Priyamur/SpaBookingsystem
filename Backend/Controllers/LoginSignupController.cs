@@ -111,19 +111,21 @@ namespace Backend.Controllers
         }
 
         [HttpPost("signup")]
-
         public IActionResult Signup([FromBody] Client client)
-
         {
+            var existingUser = _context.Clients.FirstOrDefault(u => u.Email == client.Email);
+            if (existingUser != null)
+            {
+                return Conflict("Email already exists");
+            }
+
             client.Password = EncryptString(client.Password);
-           
-
             _context.Clients.Add(client);
-
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(Signup), new { id = client.ClientId }, client);
         }
+
         private string EncryptString(string plainText)
         {
             using (Aes aes = Aes.Create())

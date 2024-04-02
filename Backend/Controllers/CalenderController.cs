@@ -24,7 +24,7 @@ namespace Backend.Controllers
         public async Task<IActionResult> GetAvailableCalenders()
         {
             var currentDate =  DateOnly.FromDateTime(DateTime.Today);
-            var availableCalenders = await _context.Calenders.Where(a => a.IsAvailable && a.NumberOfBookings < 2 && a.Date >= currentDate).ToListAsync();
+            var availableCalenders = await _context.Calenders.Where(a => a.IsAvailable && a.NumberOfBookings <= 2 && a.Date >= currentDate).ToListAsync();
             return Ok(availableCalenders);
         }
 
@@ -53,6 +53,7 @@ namespace Backend.Controllers
             await _context.SaveChangesAsync();
             return Ok(calender);
         }
+
 
         }
     }

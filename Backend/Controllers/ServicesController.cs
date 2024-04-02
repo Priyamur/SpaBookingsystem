@@ -5,7 +5,7 @@ using System.Reflection;
 //using Backend.DTOs;
 
 namespace Backend.Controllers
-{
+{ 
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class BackendController : ControllerBase
